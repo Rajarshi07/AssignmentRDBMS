@@ -1,4 +1,4 @@
-package day_7;
+package javaPrograms;
 
 @FunctionalInterface
 interface FuncInterface {

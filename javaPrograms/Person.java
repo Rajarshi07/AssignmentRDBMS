@@ -1,4 +1,4 @@
-package day_7;
+package javaPrograms;
 public class Person {
 	private String name;
 	private int age;

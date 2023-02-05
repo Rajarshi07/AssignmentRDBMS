@@ -1,6 +1,6 @@
-package day_7;
+package javaPrograms;
 
-@FuncInterfaceTester
+@FunctionalInterface
 interface MethodRefInterface {
 	Person getPerson(String name, int age);
 }
