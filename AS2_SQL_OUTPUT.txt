@@ -1,0 +1,179 @@
+
+SQL> create table Employee( EmpId number, FirstName varchar2(20), LastName varchar2(20), EmailId varchar2(40), Gender char(1), MobileNo char(10), DateOfJoining date default sysdate, DeptId int );
+
+Table created.
+
+SQL> alter table employee add(Salary number(10,2));
+
+Table altered.
+
+SQL> alter table Employee modify FirstName varchar2(30);
+
+Table altered.
+
+SQL> alter table employee modify firstname varchar2(30) constraint Employee_FirstName_NN not null;
+
+Table altered.
+
+SQL> alter table employee modify lastname varchar2(30) constraint Employee_LastName_NN not null;
+
+Table altered.
+
+SQL> alter table employee add constraint Employee_Emailid_UN unique(Emailid);
+
+Table altered.
+
+SQL> alter table employee add constraint Employee_Mobile_UN unique(mobileno);
+
+Table altered.
+
+SQL> alter table employee add constraint employee_pk primary key(empid);
+
+Table altered.
+
+SQL> alter table employee add constraint employee_gender_chk check(gender in ('M', 'F'));
+
+Table altered.
+
+SQL> -- Department Table Creation
+SQL> create table department( deptid number constraint dept_pk primary key, deptname varchar2(30) constraint dept_name_nn not null);
+
+Table created.
+
+SQL> alter table employee add constraint employee_dept_ref foreign key(deptid) references department(deptid) on delete set null;
+
+Table altered.
+
+SQL> -- Insertions into Employee Table & Department Tables
+SQL> insert into department values(1, 'IT');
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into department values(2, 'SysAdmin');
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into department values(3, 'Finance');
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(101, 'FN1', 'LN1', 'user1@gmail.com', 'M', '9876543210', sysdate, 1, 29500);
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(102, 'FN2', 'LN2', 'user2@gmail.com', 'F', '9876543211', sysdate, 1, 32000);
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(103, 'FN3', 'LN3', 'user3@gmail.com', 'M', '9876543212', sysdate, 2, 31200);
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(104, 'FN4', 'LN4', 'user4@gmail.com', 'F', '9876543213', sysdate, 2, 36000);
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(105, 'FN5', 'LN5', 'user5@gmail.com', 'M', '9876543214', sysdate, 3, 45500);
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into employee values(106, 'FN6', 'LN6', 'user6@gmail.com', 'F', '9876543215', sysdate, 3, 50000);
+
+1 row created.
+
+Commit complete.
+
+SQL> -- Location Table Creation
+SQL> create table location( lid number(5) constraint location_pk primary key, city varchar2(20) );
+
+Table created.
+
+SQL> -- Sequence Creation
+SQL> create sequence SEQ_LOC_PK start with 1000 increment by 10 nomaxvalue nocycle cache 10;
+
+Sequence created.
+
+SQL> -- Insertion into Location Table
+SQL> insert into location values(SEQ_LOC_PK.nextval, 'LOC1');
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into location values(SEQ_LOC_PK.nextval, 'LOC2');
+
+1 row created.
+
+Commit complete.
+
+SQL> insert into location values(SEQ_LOC_PK.nextval, 'LOC3');
+
+1 row created.
+
+Commit complete.
+
+SQL> -- Alterations to Department Table - Adding location column
+SQL> alter table department add lid number(5);
+
+Table altered.
+
+SQL> alter table department add constraint department_loc_ref foreign key(lid) references location(lid) on delete set null;
+
+Table altered.
+
+SQL> select * from department;
+
+DEPTID,DEPTNAME,LID
+1,IT,
+2,SysAdmin,
+3,Finance,
+
+SQL> update department set lid = 1000 where deptid = 1;
+
+1 row updated.
+
+Commit complete.
+
+SQL> update department set lid = 1010 where deptid = 2;
+
+1 row updated.
+
+Commit complete.
+
+SQL> update department set lid = 1020 where deptid = 3;
+
+1 row updated.
+
+Commit complete.
+
+SQL> select e.firstname, d.deptname, l.city from SYSTEM.employee e natural join SYSTEM.department d natural join SYSTEM.location l;
+
+FIRSTNAME,DEPTNAME,CITY
+FN1,IT,LOC1
+FN2,IT,LOC1
+FN3,SysAdmin,LOC2
+FN4,SysAdmin,LOC2
+FN5,Finance,LOC3
+FN6,Finance,LOC3
+
+SQL> select empid, firstname, salary from SYSTEM.employee order by salary desc FETCH FIRST 2 ROWS ONLY;
+
+EMPID,FIRSTNAME,SALARY
+106,FN6,50000
+105,FN5,45500
